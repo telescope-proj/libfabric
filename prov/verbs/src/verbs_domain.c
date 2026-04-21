@@ -437,9 +437,11 @@ vrb_domain(struct fid_fabric *fabric, struct fi_info *info,
 		goto err4;
 	}
 
+#ifndef _WIN32
 	ret = fi_fd_nonblock(_domain->verbs->async_fd);
 	if (ret)
 		goto err4;
+#endif
 
 	ret = vrb_init_progress(&_domain->progress, _domain->info);
 	if (ret)

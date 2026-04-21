@@ -1590,9 +1590,11 @@ err0:
 
 int vrb_eq_attach_domain(struct vrb_eq *eq, struct vrb_domain *domain)
 {
+#ifndef _WIN32
 	if (ofi_epoll_add(eq->epollfd, domain->verbs->async_fd,
 			  OFI_EPOLL_IN, domain))
 		return -errno;
+#endif
 
 	domain->eq = eq;
 	ofi_atomic_inc32(&eq->ref);
@@ -1601,8 +1603,10 @@ int vrb_eq_attach_domain(struct vrb_eq *eq, struct vrb_domain *domain)
 
 int vrb_eq_detach_domain(struct vrb_domain *domain)
 {
+#ifndef _WIN32
 	if (ofi_epoll_del(domain->eq->epollfd, domain->verbs->async_fd))
 		return -errno;
+#endif
 
 	ofi_atomic_dec32(&domain->eq->ref);
 	domain->eq = NULL;
